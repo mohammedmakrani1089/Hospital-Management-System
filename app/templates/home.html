@@ -1,0 +1,250 @@
+{% extends 'base.html' %}
+
+{% block title %}Find Your Doctor{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/login_popup.css') }}">
+{% endblock %}
+
+{% block nav_doctors %}active{% endblock %}
+
+{% block content %}
+    <!-- Find Doctor Hero title -->
+    <div class="search-title-section">
+        <h1>Find Your Doctor</h1>
+        <p>Search by name or specialty—we'll help you find the right care</p>
+    </div>
+
+    <!-- Search Bar & Filter -->
+    <div class="search-filter-bar">
+        <div class="search-main">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text" placeholder="Try 'cardiologist' or 'Dr. Smith'...">
+        </div>
+        <button class="filter-btn">
+            <i class="fa-solid fa-sliders"></i> Filter
+        </button>
+    </div>
+
+<div class="tags-container">
+    <div class="tags-pill-track" id="doctorTagsContainer" role="tablist" aria-label="Doctor filters">
+        <span class="tag-slider-pill" id="tagSliderPill" aria-hidden="true"></span>
+        <button class="tag active" type="button">All</button>
+        <button class="tag" type="button">Available Today</button>
+        <button class="tag" type="button">Lowest Fee</button>
+        <button class="tag" type="button">Most Experienced</button>
+        <button class="tag" type="button">Top Rated</button>
+    </div>
+</div>
+
+
+<!-- ==========================================
+     DOCTOR GRID - PHOTO BASED DESIGN
+=========================================== -->
+
+<div class="doctor-grid">
+
+    {% for doctor in doctors %}
+
+    <article class="doctor-card doctor-home-card">
+
+        <!-- Doctor Photo -->
+        <div class="doctor-home-image">
+
+            {% if doctor['profile_image'] %}
+
+                <img
+                    src="{{ url_for('static', filename='images/' ~ doctor['profile_image']) }}"
+                    alt="{{ doctor['doctor_name'] }}"
+                    class="doctor-img"
+                    loading="lazy">
+
+            {% else %}
+
+                <div class="doctor-home-placeholder">
+                    <i class="fa-solid fa-user-doctor"></i>
+                </div>
+
+            {% endif %}
+
+            <span class="doctor-home-tag">
+                SPY HEALTHCARE
+            </span>
+
+        </div>
+
+
+        <!-- Doctor Information -->
+        <div class="doctor-home-info">
+
+            <span class="doctor-home-specialty">
+                {{ doctor['specialization'] }}
+            </span>
+
+            <h3 class="dr-name">
+                {{ doctor['doctor_name'] }}
+            </h3>
+
+            <p class="doctor-home-qualification">
+                {{ doctor['qualification'] }}
+            </p>
+
+
+            <!-- Experience -->
+            <div class="doctor-home-details">
+
+                <span>
+                    <i class="fa-solid fa-briefcase"></i>
+                    {{ doctor['experience'] }} Years Experience
+                </span>
+
+            </div>
+
+
+            <!-- Consultation Fee and Booking -->
+            <div class="doctor-home-footer">
+
+                <div class="doctor-home-price">
+
+                    <span>Consultation Fee</span>
+
+                    <strong>
+                        ₹{{ "%.2f"|format(doctor['consultation_fee']|float) }}
+                    </strong>
+
+                </div>
+
+
+                {% if session.get('user_id') %}
+
+                    <a href="{{ url_for('home.doctor_details', doctor_id=doctor['doctor_id']) }}"
+                       class="book-btn">
+
+                        <i class="fa-regular fa-calendar-check"></i>
+                        Book Now
+
+                    </a>
+
+                {% else %}
+
+                    <button type="button"
+                            class="book-btn js-open-auth"
+                            data-doctor-id="{{ doctor['doctor_id'] }}">
+
+                        <i class="fa-regular fa-calendar-check"></i>
+                        Book Now
+
+                    </button>
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+    </article>
+
+    {% endfor %}
+
+</div>
+
+
+
+<!-- Login / Signup Popup -->
+
+<div class="auth-modal"
+     id="authModal"
+     data-login-url="{{ url_for('auth.login') }}"
+     data-signup-url="{{ url_for('auth.signup') }}"
+     role="dialog"
+     aria-modal="true"
+     aria-labelledby="modalTitle">
+
+    <div class="auth-modal-content">
+
+        <!-- Close Button -->
+        <button type="button"
+                class="modal-close"
+                data-close-modal
+                aria-label="Close popup">
+
+            <i class="fa-solid fa-xmark"></i>
+
+        </button>
+
+        <!-- Modal Icon -->
+        <div class="modal-icon-badge">
+            <i class="fa-solid fa-calendar-check"></i>
+        </div>
+
+        <!-- Heading -->
+        <span class="modal-kicker">
+            APPOINTMENT BOOKING
+        </span>
+
+        <h2 id="modalTitle">
+            Your Health, Our Priority
+        </h2>
+
+        <p class="modal-description">
+            You're just one step away from better healthcare.
+            Login or create an account to explore doctor details
+            and book your appointment.
+        </p>
+
+        <!-- Benefits -->
+        <div class="modal-highlights">
+
+            <div class="modal-highlight">
+                <i class="fa-solid fa-user-doctor"></i>
+                <span>Explore Doctors</span>
+            </div>
+
+            <div class="modal-highlight">
+                <i class="fa-regular fa-clock"></i>
+                <span>Choose Your Slot</span>
+            </div>
+
+        </div>
+
+        <!-- Login / Signup Buttons -->
+        <div class="auth-modal-buttons">
+
+            <a href="#"
+               id="modalLoginLink"
+               class="modal-login-btn">
+
+                <i class="fa-solid fa-right-to-bracket"></i>
+                <span>Login</span>
+                <i class="fa-solid fa-arrow-right modal-arrow"></i>
+
+            </a>
+
+            <a href="#"
+               id="modalSignupLink"
+               class="modal-signup-btn">
+
+                <i class="fa-solid fa-user-plus"></i>
+                <span>Create Account</span>
+
+            </a>
+
+        </div>
+
+        <!-- Security Note -->
+        <div class="modal-note">
+            <i class="fa-solid fa-shield-halved"></i>
+            <span>Your information is protected and secure.</span>
+        </div>
+
+    </div>
+
+</div>
+
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='javascript/login_popup.js') }}" defer></script>
+
+{% endblock %}
+
+{% endblock %}

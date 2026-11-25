@@ -1,0 +1,289 @@
+
+{% extends "base.html" %}
+
+{% block title %}Complete Payment | Hospital Management{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/payment.css') }}">
+{% endblock %}
+
+{% block content %}
+
+<main class="payment-page">
+
+    <!-- Page Heading -->
+    <div class="payment-heading">
+        <a href="{{ url_for('home.doctor_details', doctor_id=doctor['doctor_id']) }}" class="payment-back-link">
+            <i class="fa-solid fa-arrow-left"></i>
+            Back to Doctor
+        </a>
+
+        <div class="payment-title">
+            <span class="payment-step">STEP 3 OF 3</span>
+            <h1>Complete Your Booking</h1>
+            <p>Review your appointment details and complete your payment.</p>
+        </div>
+    </div>
+
+
+    <!-- Booking Progress -->
+    <div class="payment-progress">
+
+        <div class="progress-step completed">
+            <span><i class="fa-solid fa-check"></i></span>
+            <p>Select Slot</p>
+        </div>
+
+        <div class="progress-line completed-line"></div>
+
+        <div class="progress-step completed">
+            <span><i class="fa-solid fa-check"></i></span>
+            <p>Patient Details</p>
+        </div>
+
+        <div class="progress-line active-line"></div>
+
+        <div class="progress-step active">
+            <span>3</span>
+            <p>Payment</p>
+        </div>
+
+    </div>
+
+
+    <!-- Payment Layout -->
+    <div class="payment-layout">
+
+        <!-- Left: Appointment Details -->
+        <section class="payment-details-column">
+
+            <!-- Doctor Card -->
+            <div class="payment-card doctor-payment-card">
+
+                <div class="payment-card-heading">
+                    <i class="fa-solid fa-user-doctor"></i>
+                    <h2>Doctor Details</h2>
+                </div>
+
+                <div class="payment-doctor-info">
+
+                    {% if doctor['profile_image'] %}
+
+                    <img
+                        src="{{ url_for('static', filename='images/' ~ doctor['profile_image']) }}"
+                        alt="{{ doctor['doctor_name'] }}"
+                        class="payment-doctor-image">
+
+                    {% else %}
+
+                    <div class="payment-doctor-placeholder">
+                        <i class="fa-solid fa-user-doctor"></i>
+                    </div>
+
+                    {% endif %}
+
+                    <div class="payment-doctor-text">
+                        <h3>{{ doctor['doctor_name'] }}</h3>
+                        <p>{{ doctor['specialization'] }}</p>
+                        <span>
+                            <i class="fa-solid fa-graduation-cap"></i>
+                            {{ doctor['qualification'] }}
+                        </span>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- Appointment Card -->
+            <div class="payment-card">
+
+                <div class="payment-card-heading">
+                    <i class="fa-regular fa-calendar-check"></i>
+                    <h2>Appointment Details</h2>
+                </div>
+
+                <div class="payment-info-grid">
+
+                    <div class="payment-info-item">
+                        <span>Appointment Date</span>
+                        <strong>{{ appointment_date_label }}</strong>
+                    </div>
+
+                    <div class="payment-info-item">
+                        <span>Appointment Time</span>
+                        <strong>{{ appointment_time }}</strong>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- Patient Card -->
+            <div class="payment-card">
+
+                <div class="payment-card-heading">
+                    <i class="fa-solid fa-hospital-user"></i>
+                    <h2>Patient Details</h2>
+                </div>
+
+                <div class="payment-info-grid">
+
+                    <div class="payment-info-item">
+                        <span>Patient Name</span>
+                        <strong>{{ patient_name }}</strong>
+                    </div>
+
+                    <div class="payment-info-item">
+                        <span>Patient Age</span>
+                        <strong>{{ patient_age }} Years</strong>
+                    </div>
+
+                    <div class="payment-info-item">
+                        <span>Gender</span>
+                        <strong>{{ patient_gender }}</strong>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- Payment Information -->
+            <div class="payment-security-note">
+                <div class="security-icon">
+                    <i class="fa-solid fa-shield-halved"></i>
+                </div>
+
+                <div>
+                    <h3>Secure Payment</h3>
+                    <p>Your payment will be processed through a secure payment gateway.</p>
+                </div>
+            </div>
+
+        </section>
+
+
+        <!-- Right: Payment Summary -->
+        <aside class="payment-summary-card">
+
+            <!-- Razorpay Configuration -->
+            <div
+                id="razorpayConfig"
+                hidden
+                data-key="{{ razorpay_key_id }}"
+                data-amount="{{ razorpay_amount }}"
+                data-currency="INR"
+                data-order-id="{{ razorpay_order_id }}">
+            </div>
+
+
+            <!-- Payment Verification Form -->
+            <form
+                id="razorpayVerificationForm"
+                method="POST"
+                action="{{ url_for('home.verify_payment', doctor_id=doctor['doctor_id']) }}"
+                hidden>
+
+                {% if csrf_token is defined %}
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                {% endif %}
+
+                <input type="hidden" name="razorpay_payment_id">
+                <input type="hidden" name="razorpay_order_id">
+                <input type="hidden" name="razorpay_signature">
+
+            </form>
+
+            <div class="payment-summary-heading">
+                <h2>Payment Summary</h2>
+                <span>Order Details</span>
+            </div>
+
+            <div class="payment-summary-row">
+                <span>Consultation Fee</span>
+                <strong>
+                    ₹{{ "%.2f"|format(doctor['consultation_fee']|float) }}
+                </strong>
+            </div>
+
+            <div class="payment-summary-row">
+                <span>Additional Charges</span>
+                <strong>₹0.00</strong>
+            </div>
+
+            <div class="payment-total-row">
+                <span>Total Payable</span>
+                <strong>
+                    ₹{{ "%.2f"|format(doctor['consultation_fee']|float) }}
+                </strong>
+            </div>
+
+
+            <!-- Payment Methods -->
+            <div class="payment-method-section">
+
+                <h3>Payment Methods</h3>
+
+                <div class="payment-method-list">
+
+                    <div class="payment-method">
+                        <i class="fa-brands fa-google-pay"></i>
+                        <span>UPI</span>
+                    </div>
+
+                    <div class="payment-method">
+                        <i class="fa-regular fa-credit-card"></i>
+                        <span>Cards</span>
+                    </div>
+
+                    <div class="payment-method">
+                        <i class="fa-solid fa-building-columns"></i>
+                        <span>Net Banking</span>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- Pay Button -->
+
+            <button type="button" id="payNowButton" class="payment-pay-btn">
+
+                Pay ₹{{ "%.2f"|format(doctor['consultation_fee']|float) }}
+
+                <i class="fa-solid fa-arrow-right"></i>
+
+            </button>
+
+            <p class="payment-status-message"
+            id="paymentStatusMessage"
+            role="status"
+            aria-live="polite"></p>
+
+
+            <div class="payment-footer-note">
+                <i class="fa-solid fa-lock"></i>
+                Secure payment processing
+            </div>
+
+        </aside>
+
+    </div>
+
+</main>
+
+{% endblock %}
+
+{% block extra_js %}
+
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+<script src="{{ url_for('static', filename='javascript/payment.js') }}" defer></script>
+
+{% endblock %}
+
+

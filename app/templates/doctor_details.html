@@ -1,0 +1,403 @@
+
+{% extends "base.html" %}
+
+{% block title %}{{ doctor['doctor_name'] }} - Doctor Details{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet"
+      href="{{ url_for('static', filename='css/doctor_details.css') }}">
+{% endblock %}
+
+{% block content %}
+
+<div class="doctor-details-page">
+
+    <!-- Back Button -->
+    <a href="{{ url_for('home.doctors') }}" class="back-link">
+        <i class="fa-solid fa-arrow-left"></i>
+        <span>Back to Doctors</span>
+    </a>
+
+
+    <div class="doctor-details-layout">
+
+        <!-- LEFT SIDE: DOCTOR INFORMATION -->
+
+        <div class="doctor-main-card">
+
+            <!-- Doctor Profile -->
+            <div class="doctor-profile">
+
+                <img
+                    src="{{ url_for('static', filename='images/' ~ doctor['profile_image']) }}"
+                    alt="{{ doctor['doctor_name'] }}"
+                    class="doctor-profile-image">
+
+                <div class="doctor-information">
+
+                    <h2>{{ doctor['doctor_name'] }}</h2>
+
+                    <p class="doctor-specialization">
+                        {{ doctor['specialization'] }}
+                    </p>
+
+                    <div class="doctor-quick-info">
+
+                        <span>
+                            <i class="fa-solid fa-briefcase"></i>
+                            {{ doctor['experience'] }} Years Experience
+                        </span>
+
+                        <span>
+                            <i class="fa-solid fa-graduation-cap"></i>
+                            {{ doctor['qualification'] }}
+                        </span>
+
+                    </div>
+
+                    <div class="doctor-fee-label">
+                        <i class="fa-solid fa-indian-rupee-sign"></i>
+                        Consultation Fee:
+                        <strong>₹{{ doctor['consultation_fee'] }}</strong>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- Doctor Description -->
+            <div class="doctor-description">
+
+                <div class="section-heading">
+                    <i class="fa-solid fa-user-doctor"></i>
+                    <h3>About the Doctor</h3>
+                </div>
+
+                {% if doctor['about'] %}
+                    <p class="doctor-short-about">
+                        {{ doctor['about'] }}
+                    </p>
+                {% endif %}
+
+                <p class="doctor-full-description">
+                    {{ doctor['description'] or 'Doctor information will be updated soon.' }}
+                </p>
+
+            </div>
+
+
+            <!-- Appointment Instructions -->
+            <div class="how-to-book">
+
+                <div class="section-heading">
+                    <i class="fa-solid fa-circle-info"></i>
+                    <h3>How to Book an Appointment?</h3>
+                </div>
+
+                <div class="booking-instructions">
+
+                    <div class="instruction-item">
+                        <span class="instruction-number">1</span>
+
+                        <div>
+                            <h4>Select Appointment Date</h4>
+                            <p>Choose your preferred date from available days.</p>
+                        </div>
+                    </div>
+
+                    <div class="instruction-item">
+                        <span class="instruction-number">2</span>
+
+                        <div>
+                            <h4>Select Available Time</h4>
+                            <p>Choose an available 30-minute appointment slot.</p>
+                        </div>
+                    </div>
+
+                    <div class="instruction-item">
+                        <span class="instruction-number">3</span>
+
+                        <div>
+                            <h4>Confirm Your Appointment</h4>
+                            <p>Complete the booking and payment process.</p>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- RIGHT SIDE: APPOINTMENT SLOTS -->
+
+        <div class="booking-card"
+            id="bookingCard"
+            data-schedules="{{ schedule_data | tojson | forceescape }}"
+            data-user-name="{{ user['full_name'] }}"
+            data-user-age="{{ user_age or '' }}"
+            data-user-gender="{{ user['gender'] }}">
+
+            <div class="booking-card-heading">
+
+                <h3>Select a Slot</h3>
+
+                <p>Choose your preferred appointment date and time.</p>
+
+            </div>
+
+
+            <!-- Date Selection -->
+            <div class="date-selection">
+
+                <label for="appointmentDate">
+                    <i class="fa-regular fa-calendar"></i>
+                    Select Date
+                </label>
+
+                
+<label for="customDateTrigger">Select Date</label>
+
+<div class="custom-date-picker" id="customDatePicker">
+
+    <button type="button"
+            class="custom-date-trigger"
+            id="customDateTrigger"
+            aria-haspopup="dialog"
+            aria-expanded="false"
+            aria-controls="customCalendar">
+
+        <span>
+            <i class="fa-regular fa-calendar"></i>
+            <span id="selectedDateText">Select appointment date</span>
+        </span>
+
+        <i class="fa-solid fa-chevron-down"></i>
+
+    </button>
+
+    <!-- Custom Calendar -->
+    <div class="custom-calendar" id="customCalendar" hidden>
+
+        <div class="calendar-header">
+
+            <button type="button" id="calendarPrevMonth">
+                <i class="fa-solid fa-chevron-left"></i>
+            </button>
+
+            <strong id="calendarMonthLabel"></strong>
+
+            <button type="button" id="calendarNextMonth">
+                <i class="fa-solid fa-chevron-right"></i>
+            </button>
+
+        </div>
+
+        <div class="calendar-weekdays">
+            <span>Su</span>
+            <span>Mo</span>
+            <span>Tu</span>
+            <span>We</span>
+            <span>Th</span>
+            <span>Fr</span>
+            <span>Sa</span>
+        </div>
+
+        <div class="calendar-days" id="calendarDays"></div>
+
+        <div class="calendar-footer">
+
+            <span>Available for next 30 days</span>
+
+            <button type="button" id="calendarTodayButton">
+                Today
+            </button>
+
+        </div>
+
+    </div>
+
+    <!-- Hidden input used by existing booking JavaScript -->
+    <input type="date" id="appointmentDate" hidden>
+
+</div>
+
+
+            </div>
+
+
+            <!-- Availability Message -->
+            <div id="availabilityMessage" class="availability-message">
+                Please select a date to view available slots.
+            </div>
+
+
+            <!-- Dynamic Time Slots -->
+            <div id="slotsContainer" class="slots-container">
+
+            </div>
+
+
+            <!-- Selected Slot -->
+            <div class="selected-slot-info">
+
+                <span>Selected Time</span>
+
+                <strong id="selectedSlotLabel">
+                    Not Selected
+                </strong>
+
+            </div>
+
+
+            <!-- Total Fee -->
+            <div class="booking-total">
+
+                <span>Total Consultation Fee</span>
+
+                <strong>
+                    ₹{{ doctor['consultation_fee'] }}
+                </strong>
+
+            </div>
+
+
+            <!-- Continue Button -->
+            <button type="button"
+                    class="continue-booking-btn"
+                    id="continueBookingBtn"
+                    disabled>
+
+                Continue
+                <i class="fa-solid fa-arrow-right"></i>
+
+            </button>
+
+            
+            
+<!-- Patient Details Modal -->
+<div class="patient-modal-overlay" id="patientDetailsSection" hidden>
+
+    <div class="patient-modal-card" role="dialog" aria-modal="true" aria-labelledby="patientModalTitle">
+
+        <button type="button" class="patient-modal-close" id="closePatientModal" aria-label="Close">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+
+        <div class="patient-modal-header">
+            <span class="patient-modal-step">STEP 2 OF 3</span>
+            <h2 id="patientModalTitle">Patient Details</h2>
+            <p>Please provide details of the person receiving care.</p>
+        </div>
+
+        <!-- Appointment Summary -->
+        <div class="patient-appointment-summary">
+
+            <div class="summary-item">
+                <span>Doctor</span>
+                <strong>{{ doctor['doctor_name'] }}</strong>
+            </div>
+
+            <div class="summary-item">
+                <span>Appointment Date</span>
+                <strong id="modalAppointmentDate">Not Selected</strong>
+            </div>
+
+            <div class="summary-item">
+                <span>Appointment Time</span>
+                <strong id="modalAppointmentTime">Not Selected</strong>
+            </div>
+
+            <div class="summary-item">
+                <span>Consultation Fee</span>
+                <strong>₹{{ doctor['consultation_fee'] }}</strong>
+            </div>
+
+        </div>
+
+        <!-- Booking For -->
+        <form
+            class="patient-modal-form"
+            id="patientDetailsForm"
+            method="POST"
+            action="{{ url_for('home.payment', doctor_id=doctor['doctor_id']) }}">
+
+            <label class="patient-modal-label">Who is this appointment for?</label>
+
+            <div class="booking-type-options">
+
+                <label class="booking-type-option">
+                    <input type="radio" name="bookingFor" id="bookForSelf" value="self" checked>
+                    <i class="fa-solid fa-user"></i>
+                    <span>Myself</span>
+                </label>
+
+                <label class="booking-type-option">
+                    <input type="radio" name="bookingFor" id="bookForOther" value="other">
+                    <i class="fa-solid fa-users"></i>
+                    <span>Someone Else</span>
+                </label>
+
+            </div>
+
+            <!-- Patient Name -->
+            <div class="patient-input-group">
+                <label for="patientName">Patient Name</label>
+                <input type="text" id="patientName" name="patient_name" placeholder="Enter patient name">
+            </div>
+
+            <!-- Patient Age -->
+            <div class="patient-input-group">
+                <label for="patientAge">Patient Age</label>
+                <input type="number" id="patientAge" name="patient_age" min="0" max="120" placeholder="Enter patient age">
+            </div>
+
+            <!-- Patient Gender -->
+            <div class="patient-input-group">
+                <label for="patientGender">Gender</label>
+                <select id="patientGender" name="patient_gender">
+                    <option value="">Select Gender</option>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                    <option value="Other">Other</option>
+                </select>
+            </div>
+
+            <!-- Hidden Booking Details -->
+            <input type="hidden" id="bookingDate" name="appointment_date">
+            <input type="hidden" id="bookingStartTime" name="start_time">
+            <input type="hidden" id="bookingEndTime" name="end_time">
+
+            <div class="patient-modal-actions">
+                <button type="button" class="patient-cancel-btn" id="cancelPatientModal">
+                    Back
+                </button>
+
+                <button type="submit" class="patient-confirm-btn" id="patientConfirmBtn">
+                    Continue to Payment
+                    <i class="fa-solid fa-arrow-right"></i>
+                </button>
+            </div>
+
+            <div class="patient-modal-security">
+                <i class="fa-solid fa-shield-halved"></i>
+                Your information is secure
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+{% endblock %}
+
+
+{% block extra_js %}
+
+<script src="{{ url_for('static', filename='javascript/doctor_details.js') }}"
+        defer></script>
+
+{% endblock %}

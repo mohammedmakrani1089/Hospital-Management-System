@@ -1,0 +1,436 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Sign Up | Hospital Management System</title>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+          rel="stylesheet">
+
+    <!-- Signup CSS -->
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/signup.css') }}">
+
+</head>
+
+<body>
+
+<div class="signup-page">
+
+    <div class="signup-container">
+
+        <!-- LEFT SIDE: SIGNUP FORM -->
+
+        <div class="signup-left">
+
+            <div class="signup-form-container">
+
+                <!-- Brand -->
+                <div class="signup-brand">
+
+                    <div class="signup-brand-icon">
+                        <i class="fa-solid fa-house-medical"></i>
+                    </div>
+
+                    <span>Hospital Care</span>
+
+                </div>
+
+
+                <!-- Heading -->
+                <div class="signup-heading">
+
+                    <h2>Create Account</h2>
+
+                    <p>
+                        Join us and take a step towards better healthcare.
+                    </p>
+
+                </div>
+
+
+                <!-- Flash Messages -->
+                {% with messages = get_flashed_messages(with_categories=true) %}
+
+                    {% if messages %}
+
+                        <div class="signup-flash-container">
+
+                            {% for category, message in messages %}
+
+                                <div class="signup-flash {{ category }}">
+
+                                    <span>{{ message }}</span>
+
+                                    <button type="button"
+                                            onclick="this.parentElement.remove()">
+                                        &times;
+                                    </button>
+
+                                </div>
+
+                            {% endfor %}
+
+                        </div>
+
+                    {% endif %}
+
+                {% endwith %}
+
+
+                <!-- Signup Form -->
+                <form action="{{ url_for('auth.signup') }}"
+                      method="POST"
+                      enctype="multipart/form-data"
+                      class="signup-form">
+
+                    {{ form.hidden_tag() }}
+
+                    <!-- Preserve Selected Doctor -->
+                    <input type="hidden"
+                           name="doctor_id"
+                           value="{{ request.values.get('doctor_id', '') }}">
+
+
+                    <!-- Full Name -->
+                    <div class="form-group full-width">
+
+                        <label for="{{ form.full_name.id }}">
+                            Full Name
+                        </label>
+
+                        <div class="input-wrapper">
+
+                            <i class="fa-regular fa-user input-icon"></i>
+
+                            {{ form.full_name(
+                                class_="signup-input",
+                                placeholder="Enter your full name",
+                                autocomplete="name",
+                                required=True
+                            ) }}
+
+                        </div>
+
+                        {% for error in form.full_name.errors %}
+                            <span class="field-error">{{ error }}</span>
+                        {% endfor %}
+
+                    </div>
+
+
+                    <!-- Email -->
+                    <div class="form-group">
+
+                        <label for="{{ form.email.id }}">
+                            Email Address
+                        </label>
+
+                        <div class="input-wrapper">
+
+                            <i class="fa-regular fa-envelope input-icon"></i>
+
+                            {{ form.email(
+                                class_="signup-input",
+                                placeholder="example@gmail.com",
+                                autocomplete="email",
+                                required=True
+                            ) }}
+
+                        </div>
+
+                        {% for error in form.email.errors %}
+                            <span class="field-error">{{ error }}</span>
+                        {% endfor %}
+
+                    </div>
+
+
+                    <!-- Phone Number -->
+                    <div class="form-group">
+
+                        <label for="{{ form.phone_no.id }}">
+                            Mobile Number
+                        </label>
+
+                        <div class="input-wrapper phone-wrapper">
+
+                            <span class="phone-prefix">+91</span>
+
+                            {{ form.phone_no(
+                                class_="signup-input phone-input",
+                                placeholder="10 digit number",
+                                maxlength="10",
+                                minlength="10",
+                                inputmode="numeric",
+                                required=True
+                            ) }}
+
+                        </div>
+
+                        {% for error in form.phone_no.errors %}
+                            <span class="field-error">{{ error }}</span>
+                        {% endfor %}
+
+                    </div>
+
+
+                    <!-- Gender -->
+                    <div class="form-group">
+
+                        <label for="{{ form.gender.id }}">
+                            Gender
+                        </label>
+
+                        <div class="input-wrapper select-wrapper">
+
+                            <i class="fa-solid fa-venus-mars input-icon"></i>
+
+                            {{ form.gender(
+                                class_="signup-input select-input",
+                                required=True
+                            ) }}
+
+                        </div>
+
+                        {% for error in form.gender.errors %}
+                            <span class="field-error">{{ error }}</span>
+                        {% endfor %}
+
+                    </div>
+
+
+                    <!-- Date Of Birth -->
+                    <div class="form-group">
+
+                        <label for="{{ form.date_of_birth.id }}">
+                            Date of Birth
+                        </label>
+
+                        <div class="input-wrapper">
+
+                            <i class="fa-regular fa-calendar input-icon"></i>
+
+                            {{ form.date_of_birth(
+                                class_="signup-input",
+                                type="date",
+                                required=True
+                            ) }}
+
+                        </div>
+
+                        {% for error in form.date_of_birth.errors %}
+                            <span class="field-error">{{ error }}</span>
+                        {% endfor %}
+
+                    </div>
+
+
+                    <!-- Profile Picture -->
+                    <div class="form-group full-width">
+
+                        <label for="{{ form.profile_image.id }}">
+                            Profile Picture
+                            <span class="optional-label">Optional</span>
+                        </label>
+
+                        <div class="input-wrapper file-wrapper">
+
+                            <i class="fa-regular fa-image input-icon"></i>
+
+                            {{ form.profile_image(
+                                class_="signup-input file-input",
+                                accept=".jpg,.jpeg,.png,.webp"
+                            ) }}
+
+                        </div>
+
+                        {% for error in form.profile_image.errors %}
+                            <span class="field-error">{{ error }}</span>
+                        {% endfor %}
+
+                    </div>
+
+
+                    <!-- Password -->
+                    <div class="form-group">
+
+                        <label for="{{ form.password.id }}">
+                            Password
+                        </label>
+
+                        <div class="input-wrapper">
+
+                            <i class="fa-solid fa-lock input-icon"></i>
+
+                            {{ form.password(
+                                class_="signup-input password-input",
+                                placeholder="Create password",
+                                id="signupPassword",
+                                autocomplete="new-password",
+                                required=True
+                            ) }}
+
+                            <button type="button"
+                                    class="password-toggle"
+                                    data-target="signupPassword"
+                                    aria-label="Show password">
+
+                                <i class="fa-regular fa-eye"></i>
+
+                            </button>
+
+                        </div>
+
+                        {% for error in form.password.errors %}
+                            <span class="field-error">{{ error }}</span>
+                        {% endfor %}
+
+                    </div>
+
+
+                    <!-- Confirm Password -->
+                    <div class="form-group">
+
+                        <label for="{{ form.confirm_password.id }}">
+                            Confirm Password
+                        </label>
+
+                        <div class="input-wrapper">
+
+                            <i class="fa-solid fa-lock input-icon"></i>
+
+                            {{ form.confirm_password(
+                                class_="signup-input password-input",
+                                placeholder="Confirm password",
+                                id="confirmPassword",
+                                autocomplete="new-password",
+                                required=True
+                            ) }}
+
+                            <button type="button"
+                                    class="password-toggle"
+                                    data-target="confirmPassword"
+                                    aria-label="Show password">
+
+                                <i class="fa-regular fa-eye"></i>
+
+                            </button>
+
+                        </div>
+
+                        {% for error in form.confirm_password.errors %}
+                            <span class="field-error">{{ error }}</span>
+                        {% endfor %}
+
+                    </div>
+
+
+                    <!-- Submit Button -->
+                    <button type="submit" class="signup-submit">
+
+                        <span>Create Account</span>
+
+                        <i class="fa-solid fa-arrow-right"></i>
+
+                    </button>
+
+                </form>
+
+
+                <!-- Login Link -->
+                <div class="login-link">
+
+                    <p>
+                        Already have an account?
+
+                        <a href="{{ url_for('auth.login', doctor_id=request.values.get('doctor_id')) }}">
+                            Login
+                        </a>
+                    </p>
+
+                </div>
+
+
+                <!-- Security Note -->
+                <div class="signup-security">
+
+                    <i class="fa-solid fa-shield-halved"></i>
+
+                    <span>Your personal information is secure.</span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- RIGHT SIDE: IMAGE + WELCOME -->
+
+        <div class="signup-right">
+
+            <!-- Doctor Image -->
+            <div class="signup-image-section">
+
+               <img
+                  src="{{ url_for('static', filename='images/male d1.jpg') }}"
+                  alt="Hospital Doctor"
+                  class="signup-doctor-image">
+
+            </div>
+
+
+            <!-- Welcome Section -->
+            <div class="signup-welcome-section">
+            
+
+                <div class="welcome-logo">
+
+                    <div class="welcome-logo-icon">
+                        <i class="fa-solid fa-house-medical"></i>
+                    </div>
+
+                    <span>Hospital Care</span>
+
+                </div>
+
+                <div class="welcome-content">
+
+                    <p>Welcome to</p>
+
+                    <h1>Hospital Management System</h1>
+
+                    <p class="welcome-description">
+                        Your health journey starts here.
+                        Connect with experienced doctors,
+                        manage appointments and access
+                        healthcare services with ease.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- Signup JavaScript -->
+<script src="{{ url_for('static', filename='javascript/signup.js') }}"
+        defer></script>
+
+</body>
+</html>

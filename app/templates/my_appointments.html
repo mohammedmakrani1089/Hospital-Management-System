@@ -1,0 +1,631 @@
+
+{% extends "base.html" %}
+
+{% block title %}My Appointments | SPY HEALTHCARE{% endblock %}
+
+{% block nav_appointments %}active{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/my_appointments.css') }}">
+{% endblock %}
+
+{% block content %}
+
+<div class="my-appointments-page">
+
+    <!-- Page Header -->
+    <section class="appointments-hero">
+
+        <div>
+            <span class="appointments-eyebrow">YOUR HEALTHCARE JOURNEY</span>
+            <h1>My Appointments</h1>
+            <p>Manage your bookings, track appointment status and view your payment details.</p>
+        </div>
+
+        <a href="{{ url_for('home.doctors') }}" class="find-doctor-button">
+            <i class="fa-solid fa-plus"></i>
+            Book New Appointment
+        </a>
+
+    </section>
+
+
+    <!-- Appointment Statistics -->
+    <section class="appointment-stats">
+
+        <div class="appointment-stat-card">
+            <div class="appointment-stat-icon blue-icon">
+                <i class="fa-solid fa-calendar-check"></i>
+            </div>
+            <div>
+                <span>Total Appointments</span>
+                <h3>{{ appointment_counts.total }}</h3>
+            </div>
+        </div>
+
+
+        <div class="appointment-stat-card">
+            <div class="appointment-stat-icon green-icon">
+                <i class="fa-solid fa-calendar-day"></i>
+            </div>
+            <div>
+                <span>Upcoming</span>
+                <h3>{{ appointment_counts.upcoming }}</h3>
+            </div>
+        </div>
+
+
+        <div class="appointment-stat-card">
+            <div class="appointment-stat-icon orange-icon">
+                <i class="fa-solid fa-clock"></i>
+            </div>
+            <div>
+                <span>Pending</span>
+                <h3>{{ appointment_counts.pending }}</h3>
+            </div>
+        </div>
+
+
+        <div class="appointment-stat-card">
+            <div class="appointment-stat-icon purple-icon">
+                <i class="fa-solid fa-circle-check"></i>
+            </div>
+            <div>
+                <span>Completed</span>
+                <h3>{{ appointment_counts.completed }}</h3>
+            </div>
+        </div>
+
+    </section>
+
+
+    <!-- Appointment Filters -->
+    <section class="appointment-list-section">
+
+        <div class="appointment-list-heading">
+            <div>
+                <h2>Your Booking History</h2>
+                <p>View and manage all your appointments in one place.</p>
+            </div>
+        </div>
+
+
+        <div class="appointment-filter-tabs" id="appointmentFilterTabs">
+
+            <button type="button" class="appointment-filter active" data-filter="all">
+                All Appointments
+                <span>{{ appointment_counts.total }}</span>
+            </button>
+
+            <button type="button" class="appointment-filter" data-filter="upcoming">
+                Upcoming
+            </button>
+
+            <button type="button" class="appointment-filter" data-filter="pending">
+                Pending
+            </button>
+
+            <button type="button" class="appointment-filter" data-filter="completed">
+                Completed
+            </button>
+
+            <button type="button" class="appointment-filter" data-filter="cancelled">
+                Cancelled
+            </button>
+
+        </div>
+
+
+        <!-- Appointment Cards -->
+        <div class="appointment-cards" id="appointmentCards">
+
+            {% for appointment in appointments %}
+
+                <article class="appointment-card"
+                         data-category="{{ appointment['category'] }}">
+
+                    <!-- Card Header -->
+                    <div class="appointment-card-header">
+
+                        <div class="appointment-id">
+                            <span>Appointment ID</span>
+                            <strong>#{{ appointment['appointment_id'] }}</strong>
+                        </div>
+
+                        <span class="appointment-status status-{{ appointment['status'] }}">
+                            {{ appointment['status_label'] }}
+                        </span>
+
+                    </div>
+
+
+                    <!-- Doctor Information -->
+                    <div class="appointment-doctor">
+
+                        {% if appointment['profile_image'] %}
+
+                            <img
+                                src="{{ url_for('static', filename='images/' ~ appointment['profile_image']) }}"
+                                alt="{{ appointment['doctor_name'] }}"
+                                loading="lazy">
+
+                        {% else %}
+
+                            <div class="appointment-doctor-placeholder">
+                                <i class="fa-solid fa-user-doctor"></i>
+                            </div>
+
+                        {% endif %}
+
+                        <div class="appointment-doctor-info">
+
+                            <h3>{{ appointment['doctor_name'] }}</h3>
+
+                            <p>{{ appointment['specialization'] }}</p>
+
+                            <span>{{ appointment['qualification'] }}</span>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Appointment Details -->
+                    <div class="appointment-details-grid">
+
+                        <div class="appointment-detail-item">
+                            <i class="fa-regular fa-calendar"></i>
+                            <div>
+                                <span>Appointment Date</span>
+                                <strong>{{ appointment['date_label'] }}</strong>
+                            </div>
+                        </div>
+
+
+                        <div class="appointment-detail-item">
+                            <i class="fa-regular fa-clock"></i>
+                            <div>
+                                <span>Appointment Time</span>
+                                <strong>{{ appointment['time_label'] }}</strong>
+                            </div>
+                        </div>
+
+
+                        <div class="appointment-detail-item">
+                            <i class="fa-solid fa-user"></i>
+                            <div>
+                                <span>Patient Name</span>
+                                <strong>{{ appointment['patient_name'] }}</strong>
+                            </div>
+                        </div>
+
+
+                        <div class="appointment-detail-item">
+                            <i class="fa-solid fa-indian-rupee-sign"></i>
+                            <div>
+                                <span>Consultation Fee</span>
+                                <strong>₹{{ "%.2f"|format(appointment['amount']|float) }}</strong>
+                            </div>
+                        </div>
+
+                    </div>
+
+
+                    <!-- Payment Information -->
+                    <div class="appointment-payment-info">
+
+                        <div>
+                            <span>Payment Status</span>
+
+                            <strong class="payment-status payment-{{ appointment['payment_status'] }}">
+                                {{ appointment['payment_status']|replace('_', ' ')|title }}
+                            </strong>
+                        </div>
+
+                        {% if appointment['payment_status'] == 'paid' %}
+
+                            <div>
+                                <span>Payment Amount</span>
+                                <strong>₹{{ "%.2f"|format(appointment['amount']|float) }}</strong>
+                            </div>
+
+                        {% endif %}
+
+                        {% if appointment['refund_status'] and appointment['refund_status'] != 'not_applicable' %}
+
+                            <div>
+                                <span>Refund Status</span>
+
+                                <strong class="payment-{{ appointment['refund_status'] }}">
+                                    {{ appointment['refund_status']|replace('_', ' ')|title }}
+                                </strong>
+                            </div>
+
+                            <div>
+                                <span>Estimated Refund</span>
+
+                                <strong>
+                                    ₹{{ "%.2f"|format(appointment['refund_amount']|float) }}
+                                </strong>
+                            </div>
+
+                        {% endif %}
+
+                    </div>
+
+
+                    
+                <!-- Appointment Actions -->
+                <div class="appointment-card-actions">
+
+                    {% if appointment['can_modify'] %}
+
+                        {% if appointment['can_reschedule'] %}
+
+                            <button type="button"
+                                    class="appointment-reschedule-btn"
+                                    data-appointment-id="{{ appointment['appointment_id'] }}"
+                                    data-doctor-name="{{ appointment['doctor_name'] }}"
+                                    data-current-date="{{ appointment['date_label'] }}">
+
+                                <i class="fa-regular fa-calendar"></i>
+                                Reschedule
+
+                            </button>
+
+                        {% else %}
+
+                            <span class="reschedule-limit-reached">
+                                <i class="fa-solid fa-check-circle"></i>
+                                Already Rescheduled (1/1)
+                            </span>
+
+                        {% endif %}
+
+
+                        <!-- Cancel Appointment -->
+                        <button type="button"
+                                class="appointment-cancel-btn"
+                                data-appointment-id="{{ appointment['appointment_id'] }}"
+                                data-fee="{{ appointment['amount'] }}"
+                                data-doctor-name="{{ appointment['doctor_name'] }}"
+                                data-date="{{ appointment['date_label'] }}">
+
+                            <i class="fa-solid fa-xmark"></i>
+                            Cancel Appointment
+
+                        </button>
+
+                    {% endif %}
+
+
+                    <!-- Download Receipt -->
+                    {% if appointment['payment_status'] == 'paid' %}
+
+                        <a href="{{ url_for('home.download_receipt', appointment_id=appointment['appointment_id']) }}"
+                        class="appointment-receipt-btn">
+
+                            <i class="fa-solid fa-download"></i>
+                            Download Receipt
+
+                        </a>
+
+                    {% endif %}
+
+                </div>
+
+
+
+                </article>
+
+            {% else %}
+
+                <div class="appointments-empty-state">
+
+                    <div class="empty-appointment-icon">
+                        <i class="fa-regular fa-calendar-xmark"></i>
+                    </div>
+
+                    <h3>No Appointments Yet</h3>
+
+                    <p>
+                        You haven't booked any appointments.
+                        Find a doctor and schedule your first visit.
+                    </p>
+
+                    <a href="{{ url_for('home.doctors') }}">
+                        Find Doctors
+                        <i class="fa-solid fa-arrow-right"></i>
+                    </a>
+
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+        
+<!-- ==========================================
+     CANCEL APPOINTMENT CONFIRMATION MODAL
+=========================================== -->
+
+<div class="appointment-modal-overlay"
+     id="cancelAppointmentModal"
+     hidden>
+
+    <div class="appointment-modal-card"
+         role="dialog"
+         aria-modal="true"
+         aria-labelledby="cancelModalTitle">
+
+        <button type="button"
+                class="appointment-modal-close"
+                id="closeCancelModal"
+                aria-label="Close">
+
+            <i class="fa-solid fa-xmark"></i>
+
+        </button>
+
+
+        <div class="cancel-modal-icon">
+            <i class="fa-solid fa-calendar-xmark"></i>
+        </div>
+
+
+        <span class="cancel-modal-eyebrow">CANCELLATION REQUEST</span>
+
+        <h2 id="cancelModalTitle">Cancel Appointment?</h2>
+
+        <p class="cancel-modal-description">
+            Are you sure you want to cancel this appointment?
+            Please review the refund details before continuing.
+        </p>
+
+
+        <!-- Appointment Information -->
+        <div class="cancel-appointment-summary">
+
+            <div>
+                <span>Doctor</span>
+                <strong id="cancelDoctorName">-</strong>
+            </div>
+
+            <div>
+                <span>Appointment Date</span>
+                <strong id="cancelAppointmentDate">-</strong>
+            </div>
+
+        </div>
+
+
+        <!-- Refund Calculation -->
+        <div class="cancel-refund-summary">
+
+            <h3>Refund Details</h3>
+
+            <div>
+                <span>Consultation Fee</span>
+                <strong id="cancelConsultationFee">₹0.00</strong>
+            </div>
+
+            <div>
+                <span>Refund Percentage</span>
+                <strong id="cancelRefundPercentage">-</strong>
+            </div>
+
+            <div class="cancel-estimated-refund">
+                <span>Estimated Refund</span>
+                <strong id="cancelEstimatedRefund">₹0.00</strong>
+            </div>
+
+        </div>
+
+
+        <p class="cancel-refund-note" id="cancelRefundNote">
+            The refund amount will be recorded for processing.
+        </p>
+
+
+        <!-- Cancellation Form -->
+        <form method="POST"
+              action="{{ url_for('home.cancel_appointment') }}"
+              id="cancelAppointmentForm">
+
+            <input type="hidden"
+                   name="appointment_id"
+                   id="cancelAppointmentId">
+
+
+            <div class="cancel-modal-actions">
+
+                <button type="button"
+                        class="cancel-keep-button"
+                        id="keepAppointmentButton">
+
+                    Keep Appointment
+
+                </button>
+
+
+                <button type="submit"
+                        class="cancel-confirm-button">
+
+                    Confirm Cancellation
+
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+
+        <div class="appointment-filter-empty" id="appointmentFilterEmpty" hidden>
+
+            <i class="fa-regular fa-folder-open"></i>
+
+            <h3>No Appointments Found</h3>
+
+            <p>There are no appointments in this category.</p>
+
+        </div>
+
+    </section>
+
+</div>
+
+
+<!-- ==========================================
+     RESCHEDULE APPOINTMENT MODAL
+=========================================== -->
+
+<div class="appointment-modal-overlay"
+     id="rescheduleAppointmentModal"
+     hidden>
+
+    <div class="appointment-modal-card reschedule-modal-card"
+         role="dialog"
+         aria-modal="true"
+         aria-labelledby="rescheduleModalTitle">
+
+        <button type="button"
+                class="appointment-modal-close"
+                id="closeRescheduleModal"
+                aria-label="Close">
+
+            <i class="fa-solid fa-xmark"></i>
+
+        </button>
+
+
+        <div class="reschedule-modal-icon">
+            <i class="fa-solid fa-calendar-days"></i>
+        </div>
+
+
+        <span class="reschedule-modal-eyebrow">
+            CHANGE APPOINTMENT
+        </span>
+
+        <h2 id="rescheduleModalTitle">Reschedule Appointment</h2>
+
+        <p class="cancel-modal-description">
+            Select a new appointment date and preferred time.
+            Your existing payment will remain unchanged.
+        </p>
+
+
+        <!-- Existing Appointment -->
+        <div class="cancel-appointment-summary">
+
+            <div>
+                <span>Doctor</span>
+                <strong id="rescheduleDoctorName">-</strong>
+            </div>
+
+            <div>
+                <span>Current Date</span>
+                <strong id="rescheduleCurrentDate">-</strong>
+            </div>
+
+        </div>
+
+
+        <!-- Reschedule Form -->
+        <form method="POST"
+              action="{{ url_for('home.reschedule_appointment') }}"
+              id="rescheduleAppointmentForm">
+
+            <input type="hidden"
+                   name="appointment_id"
+                   id="rescheduleAppointmentId">
+
+
+            <div class="reschedule-input-group">
+
+                <label for="rescheduleDate">
+                    Select New Date
+                </label>
+
+                <input
+                    type="date"
+                    id="rescheduleDate"
+                    name="new_appointment_date"
+                    required>
+
+                <small>Appointments can be rescheduled within the next 30 days.</small>
+
+            </div>
+
+
+            <div class="reschedule-input-group">
+
+                <label for="rescheduleTime">
+                    Select New Start Time
+                </label>
+
+                <input
+                    type="time"
+                    id="rescheduleTime"
+                    name="new_start_time"
+                    required>
+
+                <small>The original appointment duration will remain unchanged.</small>
+
+            </div>
+
+
+            <div class="reschedule-payment-note">
+
+                <i class="fa-solid fa-shield-check"></i>
+
+                <span>
+                    Your previous payment will be carried forward.
+                    No additional payment is required for this reschedule.
+                </span>
+
+            </div>
+
+
+            <div class="cancel-modal-actions">
+
+                <button type="button"
+                        class="cancel-keep-button"
+                        id="closeRescheduleButton">
+
+                    Back
+
+                </button>
+
+
+                <button type="submit"
+                        class="reschedule-confirm-button">
+
+                    Confirm Reschedule
+
+                    <i class="fa-solid fa-arrow-right"></i>
+
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+{% endblock %}
+
+
+{% block extra_js %}
+
+<script src="{{ url_for('static', filename='javascript/my_appointments.js') }}" defer></script>
+
+{% endblock %}

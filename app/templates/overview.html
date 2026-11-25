@@ -1,0 +1,942 @@
+
+{% extends "base.html" %}
+
+{% block title %}Overview | SPY HEALTHCARE{% endblock %}
+
+{% block nav_home %}active{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/overview.css') }}">
+{% endblock %}
+
+{% block content %}
+
+<div class="overview-page">
+
+    <!-- ==========================================
+         1. HOSPITAL HERO SECTION
+    =========================================== -->
+
+    
+<!-- HOSPITAL HERO WITH REAL PHOTO -->
+
+<section class="overview-hero-photo">
+
+    <img
+        class="overview-hero-image"
+        src="https://images.unsplash.com/photo-1764885449332-7eb941d53b7e?auto=format&fit=crop&w=1800&q=85"
+        alt="Illustrative modern hospital building"
+    >
+
+    <div class="overview-hero-shade"></div>
+
+    <div class="hero-photo-content">
+
+        <span class="hero-photo-eyebrow">
+            <i class="fa-solid fa-heart-pulse"></i>
+            WELCOME TO SPY HEALTHCARE
+        </span>
+
+        <h1>
+            Better Care.<br>
+            Healthier Tomorrow.
+        </h1>
+
+        <p>
+            Your health deserves attention, care and convenience.
+            Discover doctors, manage appointments and stay connected
+            with your healthcare journey through SPY HEALTHCARE.
+        </p>
+
+        <div class="hero-photo-actions">
+
+            <a href="{{ url_for('home.doctors') }}" class="hero-photo-primary">
+                Find a Doctor
+                <i class="fa-solid fa-arrow-right"></i>
+            </a>
+
+            <a href="#overview-about" class="hero-photo-secondary">
+                Discover SPY HEALTHCARE
+            </a>
+
+        </div>
+
+        <div class="hero-photo-trust">
+
+            <span>
+                <i class="fa-solid fa-shield-heart"></i>
+                Patient-focused care
+            </span>
+
+            <span>
+                <i class="fa-solid fa-calendar-check"></i>
+                Easy appointment booking
+            </span>
+
+        </div>
+
+    </div>
+
+    <div class="hero-photo-brand">
+
+        <i class="fa-solid fa-hospital"></i>
+
+        <div>
+            <strong>SPY HEALTHCARE</strong>
+            <span>Your Health, Our Priority</span>
+        </div>
+
+    </div>
+
+</section>
+
+
+
+    <!-- ==========================================
+         2. WELCOME BACK SECTION
+    =========================================== -->
+
+    <section class="welcome-section">
+
+        <div class="welcome-text">
+
+            <span>YOUR PERSONAL HEALTH SPACE</span>
+
+            <h2>
+                Welcome back, {{ user_name }}!
+                <span>👋</span>
+            </h2>
+
+            <p>
+                We're glad to have you here. Let's take care of your health today.
+            </p>
+
+        </div>
+
+        <div class="welcome-date">
+
+            <i class="fa-regular fa-calendar"></i>
+
+            {{ today.strftime("%A, %d %B %Y") }}
+
+        </div>
+
+    </section>
+
+
+    <!-- ==========================================
+         3. QUICK ACTIONS
+    =========================================== -->
+
+    <section class="overview-section">
+
+        <div class="section-heading">
+
+            <div>
+                <span class="section-eyebrow">QUICK ACCESS</span>
+                <h2>How Can We Help You?</h2>
+                <p>Access your healthcare services easily.</p>
+            </div>
+
+        </div>
+
+
+        <div class="quick-actions-grid">
+
+            <a href="{{ url_for('home.doctors') }}" class="quick-action-card">
+
+                <div class="quick-action-icon blue-icon">
+                    <i class="fa-solid fa-user-doctor"></i>
+                </div>
+
+                <h3>Find Doctors</h3>
+
+                <p>Explore doctors and choose your specialist.</p>
+
+                <span class="quick-action-link">
+                    Explore Doctors
+                    <i class="fa-solid fa-arrow-right"></i>
+                </span>
+
+            </a>
+
+
+            <a href="#overview-upcoming" class="quick-action-card">
+
+                <div class="quick-action-icon green-icon">
+                    <i class="fa-solid fa-calendar-check"></i>
+                </div>
+
+                <h3>Upcoming Appointment</h3>
+
+                <p>Check your next scheduled appointment.</p>
+
+                <span class="quick-action-link">
+                    View Appointment
+                    <i class="fa-solid fa-arrow-right"></i>
+                </span>
+
+            </a>
+
+
+            <a href="#overview-upcoming" class="quick-action-card">
+
+                <div class="quick-action-icon purple-icon">
+                    <i class="fa-solid fa-folder-open"></i>
+                </div>
+
+                <h3>My Appointments</h3>
+
+                <p>Keep track of your booking journey.</p>
+
+                <span class="quick-action-link">
+                    Appointment Overview
+                    <i class="fa-solid fa-arrow-right"></i>
+                </span>
+
+            </a>
+
+
+            <div class="quick-action-card quick-action-disabled">
+
+                <div class="quick-action-icon orange-icon">
+                    <i class="fa-solid fa-file-medical"></i>
+                </div>
+
+                <span class="coming-soon-label">Coming Soon</span>
+
+                <h3>My Health Records</h3>
+
+                <p>Access your medical records in one place.</p>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ==========================================
+         4. APPOINTMENT STATISTICS
+    =========================================== -->
+
+    <section class="overview-section">
+
+        <div class="section-heading">
+
+            <div>
+                <span class="section-eyebrow">YOUR ACTIVITY</span>
+                <h2>Your Healthcare Overview</h2>
+                <p>A quick look at your appointment activity.</p>
+            </div>
+
+        </div>
+
+
+        <div class="statistics-grid">
+
+            <div class="stat-card">
+
+                <div class="stat-icon blue-icon">
+                    <i class="fa-solid fa-calendar-days"></i>
+                </div>
+
+                <div>
+                    <span>Total Appointments</span>
+                    <h3>{{ statistics.total_appointments }}</h3>
+                </div>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <div class="stat-icon green-icon">
+                    <i class="fa-solid fa-circle-check"></i>
+                </div>
+
+                <div>
+                    <span>Completed</span>
+                    <h3>{{ statistics.completed_appointments }}</h3>
+                </div>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <div class="stat-icon orange-icon">
+                    <i class="fa-solid fa-clock"></i>
+                </div>
+
+                <div>
+                    <span>Pending Approval</span>
+                    <h3>{{ statistics.pending_appointments }}</h3>
+                </div>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <div class="stat-icon purple-icon">
+                    <i class="fa-solid fa-user-doctor"></i>
+                </div>
+
+                <div>
+                    <span>Featured Doctors</span>
+                    <h3>{{ doctors|length }}</h3>
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ==========================================
+         5. DAILY HEALTH AWARENESS
+    =========================================== -->
+
+    <section class="daily-thought-section">
+
+        <div class="thought-icon">
+            <i class="fa-solid fa-lightbulb"></i>
+        </div>
+
+        <div class="thought-content">
+
+            <span>YOUR DAILY HEALTH AWARENESS</span>
+
+            <h2>Today's Health Thought</h2>
+
+            <blockquote>
+                "{{ daily_thought }}"
+            </blockquote>
+
+            <p>
+                A little reminder from SPY HEALTHCARE to take care of yourself.
+            </p>
+
+        </div>
+
+        <div class="thought-decoration">
+            <i class="fa-solid fa-heart-pulse"></i>
+        </div>
+
+    </section>
+
+
+    <!-- ==========================================
+         6. ABOUT SPY HEALTHCARE
+    =========================================== -->
+
+    
+<!-- ABOUT SPY HEALTHCARE -->
+
+<section class="overview-section about-photo-section" id="overview-about">
+
+    <div class="about-photo-gallery">
+
+        <img
+            class="about-main-photo"
+            src="https://images.unsplash.com/photo-1764727291644-5dcb0b1a0375?auto=format&fit=crop&w=1000&q=80"
+            alt="Illustrative modern hospital reception"
+            loading="lazy"
+        >
+
+        <div class="about-small-photo">
+
+            <img
+                src="https://images.unsplash.com/photo-1666214277730-e9c7e755e5a3?auto=format&fit=crop&w=700&q=80"
+                alt="Illustrative doctor consultation"
+                loading="lazy"
+            >
+
+        </div>
+
+        <div class="about-photo-badge">
+
+            <i class="fa-solid fa-heart-pulse"></i>
+
+            <div>
+                <strong>Care Comes First</strong>
+                <span>A patient-focused experience</span>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="about-photo-content">
+
+        <span class="section-eyebrow">WHO WE ARE</span>
+
+        <h2>
+            A Better Way to Manage
+            <span>Your Healthcare.</span>
+        </h2>
+
+        <p>
+            SPY HEALTHCARE is designed to make healthcare access
+            simpler and more convenient. Our platform brings doctor
+            discovery, appointment booking and patient information
+            together in one place.
+        </p>
+
+        <p>
+            We aim to provide a smooth digital healthcare experience
+            where patients can explore doctors, manage their bookings
+            and stay informed about their appointments.
+        </p>
+
+        <div class="about-feature-list">
+
+            <div>
+                <i class="fa-solid fa-circle-check"></i>
+                <span>Simple doctor discovery</span>
+            </div>
+
+            <div>
+                <i class="fa-solid fa-circle-check"></i>
+                <span>Convenient appointment booking</span>
+            </div>
+
+            <div>
+                <i class="fa-solid fa-circle-check"></i>
+                <span>Organized patient information</span>
+            </div>
+
+            <div>
+                <i class="fa-solid fa-circle-check"></i>
+                <span>Easy appointment tracking</span>
+            </div>
+
+        </div>
+
+        <a href="{{ url_for('home.doctors') }}" class="about-photo-button">
+            Explore Our Doctors
+            <i class="fa-solid fa-arrow-right"></i>
+        </a>
+
+    </div>
+
+</section>
+
+
+
+
+<!-- ==========================================
+     7. OUR FACILITIES / CARE ENVIRONMENT
+=========================================== -->
+
+<section class="overview-section photo-facilities-section">
+
+    <div class="section-heading">
+
+        <div>
+            <span class="section-eyebrow">OUR FACILITIES</span>
+
+            <h2>Explore Our Healthcare Environment</h2>
+
+            <p>
+                Discover the services and care experience offered
+                through SPY HEALTHCARE.
+            </p>
+        </div>
+
+    </div>
+
+
+    <div class="photo-facilities-grid">
+
+        <!-- Facility 1 -->
+        <article class="photo-facility-card photo-facility-large">
+
+            <img
+                src="https://images.unsplash.com/photo-1764727291644-5dcb0b1a0375?auto=format&fit=crop&w=1000&q=80"
+                alt="Illustrative hospital reception"
+                loading="lazy"
+            >
+
+            <div class="photo-facility-overlay">
+
+                <span>01 / PATIENT SUPPORT</span>
+
+                <h3>Reception & Assistance</h3>
+
+                <p>
+                    A welcoming first point of contact for
+                    patients and visitors.
+                </p>
+
+            </div>
+
+        </article>
+
+
+        <!-- Facility 2 -->
+        <article class="photo-facility-card">
+
+            <img
+                src="https://images.unsplash.com/photo-1666214277730-e9c7e755e5a3?auto=format&fit=crop&w=900&q=80"
+                alt="Illustrative doctor consultation"
+                loading="lazy"
+            >
+
+            <div class="photo-facility-overlay">
+
+                <span>02 / CONSULTATION</span>
+
+                <h3>Doctor Consultation</h3>
+
+                <p>
+                    Explore specialists and choose the right
+                    doctor for your healthcare needs.
+                </p>
+
+            </div>
+
+        </article>
+
+
+        <!-- Facility 3 -->
+        <article class="photo-facility-card">
+
+            <img
+                src="https://images.unsplash.com/photo-1648224394432-8830fec15349?auto=format&fit=crop&w=900&q=80"
+                alt="Illustrative patient care environment"
+                loading="lazy"
+            >
+
+            <div class="photo-facility-overlay">
+
+                <span>03 / PATIENT CARE</span>
+
+                <h3>Patient Care</h3>
+
+                <p>
+                    A comfortable and organized healthcare
+                    experience for patients.
+                </p>
+
+            </div>
+
+        </article>
+
+
+        <!-- Facility 4 -->
+        <article class="photo-facility-card">
+
+            <img
+                src="https://images.unsplash.com/photo-1777269749032-d8d458ae594d?auto=format&fit=crop&w=900&q=80"
+                alt="Illustrative hospital waiting area"
+                loading="lazy"
+            >
+
+            <div class="photo-facility-overlay">
+
+                <span>04 / PATIENT EXPERIENCE</span>
+
+                <h3>Waiting & Patient Areas</h3>
+
+                <p>
+                    An organized environment designed around
+                    the patient experience.
+                </p>
+
+            </div>
+
+        </article>
+
+    </div>
+
+</section>
+
+
+
+
+<!-- ==========================================
+     8. MEET OUR DOCTORS - PREMIUM SLIDER
+=========================================== -->
+
+<section class="overview-section doctors-photo-section">
+
+    <div class="section-heading doctors-heading">
+
+        <div>
+            <span class="section-eyebrow">MEET OUR SPECIALISTS</span>
+
+            <h2>Meet Our Experienced Doctors</h2>
+
+            <p>
+                Get to know our medical professionals and find
+                the right specialist for your healthcare needs.
+            </p>
+        </div>
+
+        <div class="doctor-slider-controls">
+
+            <button type="button"
+                    id="doctorSliderPrev"
+                    aria-label="Previous doctors">
+
+                <i class="fa-solid fa-chevron-left"></i>
+
+            </button>
+
+            <button type="button"
+                    id="doctorSliderNext"
+                    aria-label="Next doctors">
+
+                <i class="fa-solid fa-chevron-right"></i>
+
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- Slider -->
+    <div class="doctor-slider-viewport" id="doctorSliderViewport">
+
+        <div class="doctor-slider-track" id="doctorSliderTrack">
+
+            {% for doctor in doctors %}
+
+                <article class="doctor-slide-card doctor-profile-card">
+
+                    <!-- Doctor Photo -->
+                    <div class="doctor-profile-photo">
+
+                        {% if doctor['profile_image'] %}
+
+                            <img
+                                src="{{ url_for('static', filename='images/' ~ doctor['profile_image']) }}"
+                                alt="{{ doctor['doctor_name'] }}"
+                                loading="lazy"
+                            >
+
+                        {% else %}
+
+                            <div class="doctor-profile-placeholder">
+                                <i class="fa-solid fa-user-doctor"></i>
+                            </div>
+
+                        {% endif %}
+
+                        <span class="doctor-photo-tag">
+                            SPY HEALTHCARE
+                        </span>
+
+                    </div>
+
+
+                    <!-- Doctor Details -->
+                    <div class="doctor-profile-info">
+
+                        <span class="doctor-profile-specialization">
+                            {{ doctor['specialization'] }}
+                        </span>
+
+                        <h3>{{ doctor['doctor_name'] }}</h3>
+
+                        <p class="doctor-profile-qualification">
+                            {{ doctor['qualification'] }}
+                        </p>
+
+
+                        <!-- Experience and Fee -->
+                        <div class="doctor-profile-meta">
+
+                            <span>
+                                <i class="fa-solid fa-briefcase"></i>
+                                {{ doctor['experience'] }} Years Experience
+                            </span>
+
+                            <span>
+                                <i class="fa-solid fa-wallet"></i>
+                                ₹{{ "%.2f"|format(doctor['consultation_fee']|float) }}
+                            </span>
+
+                        </div>
+
+
+                        <!-- Patient Reviews -->
+                        <div class="doctor-profile-review">
+
+                            {% if doctor.get('review_count', 0)|int > 0 %}
+
+                                <span class="doctor-rating-value">
+                                    <i class="fa-solid fa-star"></i>
+                                    {{ "%.1f"|format(doctor.get('average_rating', 0)|float) }}/5
+                                </span>
+
+                                <span class="doctor-review-count">
+                                    {{ doctor['review_count'] }} Patient Reviews
+                                </span>
+
+                            {% else %}
+
+                                <span class="doctor-no-reviews">
+                                    <i class="fa-regular fa-star"></i>
+                                    Reviews coming soon
+                                </span>
+
+                            {% endif %}
+
+                        </div>
+
+
+                        <!-- Profile Button -->
+                        <a
+                            href="{{ url_for('home.doctor_details', doctor_id=doctor['doctor_id']) }}"
+                            class="doctor-profile-button">
+
+                            View Doctor Profile
+
+                            <i class="fa-solid fa-arrow-right"></i>
+
+                        </a>
+
+                    </div>
+
+                </article>
+
+            {% else %}
+
+                <div class="empty-doctors-message">
+                    No doctors are currently available.
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+    </div>
+
+
+    <!-- View All -->
+    <div class="doctors-photo-footer">
+
+        <a href="{{ url_for('home.doctors') }}">
+
+            View All Doctors
+
+            <i class="fa-solid fa-arrow-right"></i>
+
+        </a>
+
+    </div>
+
+</section>
+
+
+    <!-- ==========================================
+         9. UPCOMING APPOINTMENT
+    =========================================== -->
+
+    <section class="overview-section upcoming-section" id="overview-upcoming">
+
+        <div class="section-heading">
+
+            <div>
+                <span class="section-eyebrow">YOUR NEXT VISIT</span>
+                <h2>Upcoming Appointment</h2>
+                <p>Keep track of your next scheduled doctor visit.</p>
+            </div>
+
+        </div>
+
+
+        {% if upcoming_appointment %}
+
+            <div class="upcoming-appointment-card">
+
+                <div class="upcoming-doctor-info">
+
+                    {% if upcoming_appointment['profile_image'] %}
+
+                        <img
+                            src="{{ url_for('static', filename='images/' ~ upcoming_appointment['profile_image']) }}"
+                            alt="{{ upcoming_appointment['doctor_name'] }}"
+                            loading="lazy">
+
+                    {% else %}
+
+                        <div class="upcoming-doctor-placeholder">
+                            <i class="fa-solid fa-user-doctor"></i>
+                        </div>
+
+                    {% endif %}
+
+                    <div>
+
+                        <span class="upcoming-specialization">
+                            {{ upcoming_appointment['specialization'] }}
+                        </span>
+
+                        <h3>{{ upcoming_appointment['doctor_name'] }}</h3>
+
+                        <p>
+                            Appointment for
+                            <strong>{{ upcoming_appointment['patient_name'] }}</strong>
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="upcoming-appointment-details">
+
+                    <div>
+                        <i class="fa-regular fa-calendar"></i>
+
+                        <span>
+                            <small>Date</small>
+                            <strong>{{ upcoming_appointment['date_label'] }}</strong>
+                        </span>
+                    </div>
+
+
+                    <div>
+                        <i class="fa-regular fa-clock"></i>
+
+                        <span>
+                            <small>Time</small>
+                            <strong>
+                                {{ upcoming_appointment['start_time_label'] }}
+                                -
+                                {{ upcoming_appointment['end_time_label'] }}
+                            </strong>
+                        </span>
+                    </div>
+
+                </div>
+
+
+                <div class="upcoming-appointment-status">
+
+                    <span class="appointment-status-label">
+                        {{ upcoming_appointment['status_label'] }}
+                    </span>
+
+                    <p>Appointment #{{ upcoming_appointment['appointment_id'] }}</p>
+
+                </div>
+
+            </div>
+
+        {% else %}
+
+            <div class="no-upcoming-appointment">
+
+                <div class="no-appointment-icon">
+                    <i class="fa-regular fa-calendar-xmark"></i>
+                </div>
+
+                <h3>No Upcoming Appointments</h3>
+
+                <p>
+                    You don't have any upcoming appointments.
+                    Explore our doctors and book your next visit.
+                </p>
+
+                <a href="{{ url_for('home.doctors') }}">
+                    Find a Doctor
+                    <i class="fa-solid fa-arrow-right"></i>
+                </a>
+
+            </div>
+
+        {% endif %}
+
+    </section>
+
+
+    <!-- ==========================================
+         10. HOW IT WORKS
+    =========================================== -->
+
+    <section class="overview-section how-it-works-section">
+
+        <div class="section-heading">
+
+            <div>
+                <span class="section-eyebrow">SIMPLE & CONVENIENT</span>
+                <h2>Your Healthcare Journey</h2>
+                <p>Getting an appointment is easy with SPY HEALTHCARE.</p>
+            </div>
+
+        </div>
+
+
+        <div class="how-it-works-grid">
+
+            <div class="journey-step">
+                <span>01</span>
+                <i class="fa-solid fa-user-doctor"></i>
+                <h3>Find a Doctor</h3>
+                <p>Choose a doctor according to your healthcare needs.</p>
+            </div>
+
+            <div class="journey-step">
+                <span>02</span>
+                <i class="fa-solid fa-calendar-days"></i>
+                <h3>Select a Slot</h3>
+                <p>Choose a suitable date and available appointment time.</p>
+            </div>
+
+            <div class="journey-step">
+                <span>03</span>
+                <i class="fa-solid fa-credit-card"></i>
+                <h3>Complete Booking</h3>
+                <p>Enter patient details and complete the test payment process.</p>
+            </div>
+
+            <div class="journey-step">
+                <span>04</span>
+                <i class="fa-solid fa-heart-circle-check"></i>
+                <h3>Get Appointment Updates</h3>
+                <p>Stay informed as your appointment moves through approval.</p>
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ==========================================
+         11. HOSPITAL FOOTER BANNER
+    =========================================== -->
+
+    <section class="overview-bottom-banner">
+
+        <div>
+            <span>SPY HEALTHCARE</span>
+            <h2>Your Health Journey Starts Here.</h2>
+            <p>Take the next step towards managing your healthcare conveniently.</p>
+        </div>
+
+        <a href="{{ url_for('home.doctors') }}">
+            Explore Doctors
+            <i class="fa-solid fa-arrow-right"></i>
+        </a>
+
+    </section>
+
+
+</div>
+
+{% endblock %}
+
+
+{% block extra_js %}
+
+<script src="{{ url_for('static', filename='javascript/overview.js') }}" defer></script>
+
+{% endblock %}

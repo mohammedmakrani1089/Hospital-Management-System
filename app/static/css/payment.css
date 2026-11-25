@@ -1,0 +1,562 @@
+
+/* Payment Page */
+.payment-page
+{
+    width: 100%;
+    max-width: 1250px;
+    margin: 0 auto;
+    padding: 35px 25px 60px;
+}
+
+.payment-heading
+{
+    margin-bottom: 25px;
+}
+
+.payment-back-link
+{
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    margin-bottom: 23px;
+    color: #64748b;
+    font-size: 13px;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.payment-back-link:hover
+{
+    color: #2563eb;
+}
+
+.payment-title
+{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 9px;
+}
+
+.payment-step
+{
+    padding: 6px 12px;
+    border-radius: 20px;
+    background: #eff6ff;
+    color: #2563eb;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+
+.payment-title h1
+{
+    margin: 0;
+    color: #172033;
+    font-size: 28px;
+}
+
+.payment-title p
+{
+    margin: 0;
+    color: #64748b;
+    font-size: 14px;
+}
+
+
+/* Progress Steps */
+.payment-progress
+{
+    display: flex;
+    align-items: center;
+    max-width: 700px;
+    margin: 35px auto 40px;
+}
+
+.progress-step
+{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    min-width: 85px;
+}
+
+.progress-step > span
+{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    background: #e2e8f0;
+    color: #64748b;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.progress-step p
+{
+    margin: 0;
+    color: #64748b;
+    font-size: 12px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.progress-step.completed > span
+{
+    background: #dcfce7;
+    color: #15803d;
+}
+
+.progress-step.completed p
+{
+    color: #15803d;
+}
+
+.progress-step.active > span
+{
+    background: #2563eb;
+    color: #ffffff;
+}
+
+.progress-step.active p
+{
+    color: #2563eb;
+}
+
+.progress-line
+{
+    flex: 1;
+    height: 2px;
+    margin: 0 10px 22px;
+    background: #e2e8f0;
+}
+
+.completed-line
+{
+    background: #16a34a;
+}
+
+.active-line
+{
+    background: #bfdbfe;
+}
+
+
+/* Main Layout */
+.payment-layout
+{
+    display: grid;
+    grid-template-columns: minmax(0, 1.55fr) minmax(300px, 0.85fr);
+    align-items: start;
+    gap: 25px;
+}
+
+.payment-details-column
+{
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.payment-card
+{
+    padding: 23px;
+    border: 1px solid #e2e8f0;
+    border-radius: 14px;
+    background: #ffffff;
+    box-shadow: 0 4px 15px rgba(15, 23, 42, 0.035);
+}
+
+.payment-card-heading
+{
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    margin-bottom: 20px;
+}
+
+.payment-card-heading > i
+{
+    color: #2563eb;
+    font-size: 18px;
+}
+
+.payment-card-heading h2
+{
+    margin: 0;
+    color: #1e293b;
+    font-size: 16px;
+    font-weight: 700;
+}
+
+
+/* Doctor Information */
+.payment-doctor-info
+{
+    display: flex;
+    align-items: center;
+    gap: 17px;
+}
+
+.payment-doctor-image,
+.payment-doctor-placeholder
+{
+    width: 80px;
+    height: 80px;
+    flex-shrink: 0;
+    border-radius: 12px;
+    object-fit: cover;
+}
+
+.payment-doctor-placeholder
+{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #eff6ff;
+    color: #2563eb;
+    font-size: 28px;
+}
+
+.payment-doctor-text h3
+{
+    margin: 0 0 5px;
+    color: #172033;
+    font-size: 16px;
+}
+
+.payment-doctor-text p
+{
+    margin: 0 0 8px;
+    color: #2563eb;
+    font-size: 13px;
+}
+
+.payment-doctor-text span
+{
+    color: #64748b;
+    font-size: 12px;
+}
+
+
+/* Appointment and Patient Information */
+.payment-info-grid
+{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.payment-info-item
+{
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    min-width: 0;
+}
+
+.payment-info-item span
+{
+    color: #64748b;
+    font-size: 12px;
+}
+
+.payment-info-item strong
+{
+    color: #263449;
+    font-size: 13px;
+    overflow-wrap: anywhere;
+}
+
+
+/* Security Notice */
+.payment-security-note
+{
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    padding: 18px;
+    border: 1px solid #bbf7d0;
+    border-radius: 12px;
+    background: #f0fdf4;
+}
+
+.security-icon
+{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    flex-shrink: 0;
+    border-radius: 50%;
+    background: #dcfce7;
+    color: #15803d;
+    font-size: 17px;
+}
+
+.payment-security-note h3
+{
+    margin: 0 0 5px;
+    color: #166534;
+    font-size: 13px;
+}
+
+.payment-security-note p
+{
+    margin: 0;
+    color: #4b7b5b;
+    font-size: 12px;
+    line-height: 1.6;
+}
+
+
+/* Payment Summary */
+.payment-summary-card
+{
+    position: sticky;
+    top: 25px;
+    padding: 24px;
+    border: 1px solid #e2e8f0;
+    border-radius: 15px;
+    background: #ffffff;
+    box-shadow: 0 6px 22px rgba(15, 23, 42, 0.055);
+}
+
+.payment-summary-heading
+{
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    margin-bottom: 25px;
+}
+
+.payment-summary-heading h2
+{
+    margin: 0;
+    color: #172033;
+    font-size: 19px;
+}
+
+.payment-summary-heading span
+{
+    color: #64748b;
+    font-size: 12px;
+}
+
+.payment-summary-row
+{
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 19px;
+}
+
+.payment-summary-row span
+{
+    color: #64748b;
+    font-size: 13px;
+}
+
+.payment-summary-row strong
+{
+    color: #263449;
+    font-size: 13px;
+}
+
+.payment-total-row
+{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 19px 0;
+    margin-top: 8px;
+    border-top: 1px solid #e2e8f0;
+}
+
+.payment-total-row span
+{
+    color: #263449;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.payment-total-row strong
+{
+    color: #2563eb;
+    font-size: 23px;
+    font-weight: 800;
+}
+
+
+/* Payment Methods */
+.payment-method-section
+{
+    padding: 18px 0;
+    border-top: 1px solid #e2e8f0;
+}
+
+.payment-method-section h3
+{
+    margin: 0 0 13px;
+    color: #263449;
+    font-size: 13px;
+}
+
+.payment-method-list
+{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.payment-method
+{
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    padding: 9px 11px;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    color: #475569;
+    font-size: 11px;
+}
+
+.payment-method i
+{
+    color: #2563eb;
+    font-size: 14px;
+}
+
+
+/* Pay Button */
+.payment-pay-btn
+{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    width: 100%;
+    min-height: 51px;
+    margin-top: 14px;
+    border: none;
+    border-radius: 10px;
+    background: #2563eb;
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.payment-pay-btn:disabled
+{
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.payment-coming-soon
+{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    margin: 12px 0 0;
+    color: #64748b;
+    font-size: 11px;
+    text-align: center;
+    line-height: 1.5;
+}
+
+.payment-footer-note
+{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    margin-top: 20px;
+    color: #16a34a;
+    font-size: 11px;
+}
+
+
+/* Responsive Design */
+@media (max-width: 850px)
+{
+    .payment-layout
+    {
+        grid-template-columns: 1fr;
+    }
+
+    .payment-summary-card
+    {
+        position: static;
+    }
+}
+
+@media (max-width: 550px)
+{
+    .payment-page
+    {
+        padding: 25px 15px 40px;
+    }
+
+    .payment-title h1
+    {
+        font-size: 23px;
+    }
+
+    .payment-progress
+    {
+        margin: 28px 0;
+    }
+
+    .progress-step
+    {
+        min-width: 65px;
+    }
+
+    .progress-step p
+    {
+        font-size: 10px;
+    }
+
+    .progress-line
+    {
+        margin-left: 4px;
+        margin-right: 4px;
+    }
+
+    .payment-card,
+    .payment-summary-card
+    {
+        padding: 18px;
+    }
+
+    .payment-info-grid
+    {
+        gap: 17px 12px;
+    }
+
+    .payment-doctor-image,
+    .payment-doctor-placeholder
+    {
+        width: 65px;
+        height: 65px;
+    }
+}
+
+
+.payment-status-message
+{
+    min-height: 18px;
+    margin: 12px 0 0;
+    color: #b45309;
+    font-size: 12px;
+    line-height: 1.6;
+    text-align: center;
+}

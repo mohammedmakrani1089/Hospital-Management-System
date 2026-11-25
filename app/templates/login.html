@@ -1,0 +1,265 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Login | Hospital Management System</title>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+          rel="stylesheet">
+
+    <!-- Login CSS -->
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/login.css') }}">
+
+</head>
+
+<body>
+
+<div class="login-page">
+
+    <div class="login-container">
+
+        <!-- LEFT SIDE -->
+        <div class="login-left">
+
+            <!-- Doctor Image Section -->
+            <div class="login-image-section">
+
+                <img
+                    src="{{ url_for('static', filename='images/women-doctor2.jpg') }}"
+                    alt="Hospital Doctor"
+                    class="login-doctor-image">
+
+            </div>
+
+            <!-- Blue Welcome Section -->
+            <div class="login-welcome-section">
+
+                <div class="welcome-logo">
+                    <div class="welcome-logo-icon">
+                        <i class="fa-solid fa-house-medical"></i>
+                    </div>
+
+                    <span>Hospital Care</span>
+                </div>
+
+                <div class="welcome-content">
+
+                    <p>Welcome to</p>
+
+                    <h1>Hospital Management System</h1>
+
+                    <p class="welcome-description">
+                        A simple and secure platform to manage
+                        your healthcare appointments and connect
+                        with experienced doctors.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- RIGHT SIDE -->
+        <div class="login-right">
+
+            <div class="login-form-container">
+
+                <!-- Brand -->
+                <div class="login-brand">
+
+                    <div class="login-brand-icon">
+                        <i class="fa-solid fa-house-medical"></i>
+                    </div>
+
+                    <span>Hospital Care</span>
+
+                </div>
+
+
+                <!-- Heading -->
+                <div class="login-heading">
+
+                    <h2>Login</h2>
+
+                    <p>
+                        Enter your credentials to access your account.
+                    </p>
+
+                </div>
+
+
+                <!-- Flash Messages -->
+                {% with messages = get_flashed_messages(with_categories=true) %}
+
+                    {% if messages %}
+
+                        <div class="login-flash-container">
+
+                            {% for category, message in messages %}
+
+                                <div class="login-flash {{ category }}">
+
+                                    <span>{{ message }}</span>
+
+                                    <button type="button"
+                                            onclick="this.parentElement.remove()">
+                                        &times;
+                                    </button>
+
+                                </div>
+
+                            {% endfor %}
+
+                        </div>
+
+                    {% endif %}
+
+                {% endwith %}
+
+
+                <!-- Login Form -->
+                <form action="{{ url_for('auth.login') }}"
+                      method="POST"
+                      class="login-form">
+
+                    {{ form.hidden_tag() }}
+
+                    <!-- Preserve Doctor ID -->
+                    <input type="hidden"
+                           name="doctor_id"
+                           value="{{ request.values.get('doctor_id', '') }}">
+
+
+                    <!-- Email / Phone -->
+                    <div class="form-group">
+
+                        <label for="{{ form.email_or_phone.id }}">
+                            Email or Mobile Number
+                        </label>
+
+                        <div class="input-wrapper">
+
+                            <i class="fa-regular fa-user input-icon"></i>
+
+                            {{ form.email_or_phone(
+                                class_="login-input",
+                                placeholder="Enter email or 10-digit mobile number",
+                                autocomplete="username",
+                                required=True
+                            ) }}
+
+                        </div>
+
+                        {% for error in form.email_or_phone.errors %}
+
+                            <span class="field-error">
+                                {{ error }}
+                            </span>
+
+                        {% endfor %}
+
+                    </div>
+
+
+                    <!-- Password -->
+                    <div class="form-group">
+
+                        <label for="{{ form.password.id }}">
+                            Password
+                        </label>
+
+                        <div class="input-wrapper">
+
+                            <i class="fa-solid fa-lock input-icon"></i>
+
+                            {{ form.password(
+                                class_="login-input password-input",
+                                placeholder="Enter your password",
+                                autocomplete="current-password",
+                                id="loginPassword",
+                                required=True
+                            ) }}
+
+                            <button type="button"
+                                    class="password-toggle"
+                                    id="togglePassword"
+                                    aria-label="Show password">
+
+                                <i class="fa-regular fa-eye"></i>
+
+                            </button>
+
+                        </div>
+
+                        {% for error in form.password.errors %}
+
+                            <span class="field-error">
+                                {{ error }}
+                            </span>
+
+                        {% endfor %}
+
+                    </div>
+
+
+                    <!-- Login Button -->
+                    <button type="submit" class="login-submit">
+
+                        <span>Sign In</span>
+
+                        <i class="fa-solid fa-arrow-right"></i>
+
+                    </button>
+
+                </form>
+
+
+                <!-- Signup Link -->
+                <div class="signup-link">
+
+                    <p>
+                        Don't have an account?
+
+                        <a href="{{ url_for('auth.signup', doctor_id=request.values.get('doctor_id')) }}">
+                            Sign Up
+                        </a>
+                    </p>
+
+                </div>
+
+
+                <!-- Security Note -->
+                <div class="login-security">
+
+                    <i class="fa-solid fa-shield-halved"></i>
+
+                    <span>Your account information is secure.</span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- Login JavaScript -->
+<script src="{{ url_for('static', filename='javascript/login.js') }}"
+        defer></script>
+
+</body>
+</html>

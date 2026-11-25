@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Base page title, overrides can be done via blocks -->
+    <title>{% block title %}Hospital Management System{% endblock %}</title>
+    
+    <!-- Icons aur Fonts pure website me common rehte hain -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Common CSS file -->
+    <link rel="stylesheet" href="{{url_for('static', filename = 'css/home.css')}}">
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+
+    <div class="dashboard-container">
+        <!-- GLOBAL HEADER (Sabhi pages pe exact same rahega) -->
+        
+<!-- GLOBAL USER HEADER -->
+<header>
+
+    <div class="left-header">
+
+        <div class="logo">
+            <i class="fa-solid fa-house-medical"></i>
+        </div>
+
+        <!-- Navigation Menu with Sliding Pill -->
+        <nav id="mainNav" aria-label="Main navigation">
+
+            <span class="nav-slider-pill" id="navSliderPill" aria-hidden="true"></span>
+
+            <a href="{{ url_for('home.overview') }}"
+               class="{% block nav_home %}{% endblock %}">
+                Overview
+            </a>
+
+            <a href="{{ url_for('home.doctors') }}"
+               class="{% block nav_doctors %}{% endblock %}">
+                <i class="fa-solid fa-user-doctor"
+                   style="margin-right: 6px;"></i>
+                Find Doctors
+            </a>
+
+            <a href="{{ url_for('home.my_appointments') }}"
+               class="{% block nav_appointments %}{% endblock %}">
+                My Appointments
+            </a>
+
+            <a href="#"
+               class="{% block nav_records %}{% endblock %}"
+               title="Coming soon">
+                My Health Records
+            </a>
+
+        </nav>
+
+    </div>
+
+
+    <!-- Right Header -->
+    <div class="right-header">
+
+        <!-- Search -->
+        <div class="search-nav">
+
+            <i class="fa-solid fa-magnifying-glass"
+               style="color: var(--text-light); font-size: 13px;"></i>
+
+            <input type="text" placeholder="Search">
+
+        </div>
+
+        <!-- Light / Dark Theme Toggle -->
+        <button type="button"
+                class="icon-btn theme-toggle-btn"
+                id="themeToggleBtn"
+                aria-label="Toggle dark mode"
+                title="Switch Light / Dark Mode">
+
+            <i class="fa-regular fa-moon" id="themeIcon"></i>
+
+        </button>
+
+        <!-- Notifications -->
+        {% if session.get('user_id') %}
+
+            <button type="button"
+                    class="icon-btn"
+                    aria-label="Notifications"
+                    title="Notifications">
+
+                <i class="fa-regular fa-bell"></i>
+
+            </button>
+
+        {% endif %}
+
+
+        <!-- User Profile -->
+        {% if session.get('user_id') %}
+
+            <img
+                src="{{ url_for(
+                    'static',
+                    filename='images/profile/' ~ (session.get('profile_image') or 'default_profile.png')
+                ) }}"
+                alt="User Profile"
+                class="user-profile">
+
+        {% endif %}
+
+
+        <!-- Logout / Login -->
+        {% if session.get('user_id') %}
+
+            <form method="POST"
+                  action="{{ url_for('auth.logout') }}"
+                  class="logout-form">
+
+                <button type="submit" class="logout-btn">
+
+                    <i class="fa-solid fa-right-from-bracket"></i>
+                    Logout
+
+                </button>
+
+            </form>
+
+        {% else %}
+
+            <a href="{{ url_for('auth.login') }}"
+               class="logout-btn">
+                Login
+            </a>
+
+        {% endif %}
+
+    </div>
+
+</header>
+
+        
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        <div class="flash-container">
+
+            {% for category, message in messages %}
+
+                <div class="flash-message {{ category }}">
+                    {{ message }}
+
+                    <button type="button"
+                            onclick="this.parentElement.remove()">
+                        &times;
+                    </button>
+                </div>
+
+            {% endfor %}
+
+        </div>
+    {% endif %}
+{% endwith %}
+
+
+        <!-- Dynamic page content load hone ki jagah -->
+        <main>
+            {% block content %}
+            <!-- Yahan dynamic pages ka content automatic fit hoga -->
+            {% endblock %}
+        </main>
+    </div>
+    
+<script src="{{ url_for('static', filename='javascript/home.js') }}" defer></script>
+{% block extra_js %}{% endblock %}
+    
+</body>
+</html>
